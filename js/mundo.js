@@ -1,9 +1,9 @@
 function Mundo() {
 	this.context = null;
-	this.canvas  = null;
+	this.canvas = null;
 	this.inhabitants = [];
 
-	function resizeCanvas(){
+	this.resize_canvas = function(){
 		this.canvas.width = window.innerWidth - 250;
 		this.canvas.height = window.innerHeight - 140;
 	}		
@@ -13,9 +13,9 @@ function Mundo() {
 		t.canvas = document.getElementById("canvas");
 		t.context = t.canvas.getContext('2d');
 	
-		resizeCanvas();		
+		t.resize_canvas();	
 		$(window).resize(function(){
-			resizeCanvas();
+		 	t.resize_canvas();
 		});
 
 		var heartbeat = function() {
