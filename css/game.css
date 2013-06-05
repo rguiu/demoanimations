@@ -49,6 +49,7 @@ canvas {
 	background-color: #9e9;
 }
 
-#footer p {
+#commands p {
 	font-size: 0.8em;
+	line-height: 0.85em;
 }

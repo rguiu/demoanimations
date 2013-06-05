@@ -5,7 +5,7 @@ function Mundo() {
 
 	this.resize_canvas = function(){
 		this.canvas.width = window.innerWidth - 250;
-		this.canvas.height = window.innerHeight - 140;
+		this.canvas.height = window.innerHeight - 200;
 	}		
 
 	__construct = function(t) {
