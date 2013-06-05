@@ -1,0 +1,54 @@
+h1 {
+	font-size: 1em;
+	font-weight: bold;
+}
+
+p {
+	font-size: 0.8em;
+}
+
+canvas {
+	background-color: #fafafa;
+}
+
+#main {
+	width: 100%;
+}
+
+#canvasdiv {
+	float: left;
+	display: inline;
+}
+#controls h2 {
+	font-size: 0.8em;
+}
+
+#controls {
+	width: 200px;
+	float: left;
+	display: inline;
+	background: #eee;
+	min-height: 400px;
+}
+
+#controls table{
+	margin-bottom: 10px;
+}
+
+#controls td.name{
+	background-color: #e99;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+#controls td{
+	font-size: 0.6em;
+	border: 1px solid black;
+	width: 30px;
+	text-align: center;
+	background-color: #9e9;
+}
+
+#footer p {
+	font-size: 0.8em;
+}
