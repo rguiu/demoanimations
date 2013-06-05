@@ -16,10 +16,10 @@ $(function() {
 	    } else if (ors[1] === "para") {
 	    	person.move(-1);
 	    } else if (ors[1] === "baila") {
-	    	person.baila();
+	    	person.dance();
 	    } else if (ors[0] === "musica") {
-	    	for(var i in mundo.personas) {
-				mundo.personas[i].baila();
+	    	for(var i in mundo.inhabitants) {
+				mundo.inhabitants[i].dance();
 			} 
 	    } else if (ors[0] === "nace" && ors.length === 5) {
 	    	// chapucilla

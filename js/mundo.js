@@ -55,12 +55,12 @@ $(function() {
 	paco = new LiveObject('paco', 'imagenes/person02/images/person02_$.png', 50,20, 32,80, 128);
 	juan = new LiveObject('juan', 'imagenes/person03/images/person03_$.png', 90,5, 32,80, 128);
 
-	var house = new BaseObject('house', 'imagenes/houses/house1.png', 300, 200, 278, 229);
+	//var house = new BaseObject('house', 'imagenes/houses/house1.png', 300, 200, 278, 229);
 	mundo = new Mundo();
 
 	mundo.inhabitants.push(pepe);
 	mundo.inhabitants.push(paco);
 	mundo.inhabitants.push(juan);
-	mundo.inhabitants.push(house);
+	//mundo.inhabitants.push(house);
 
 });
