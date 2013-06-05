@@ -3,6 +3,8 @@ function BaseObject(name, image_path, x, y, width, height, image_count) {
 	this.image_path = image_path;
 	this.x 		  	= x;
 	this.y        	= y;
+	this.ready    	     = false;	
+
 	if (width) {
 		this.width       = width;		
 	}
@@ -14,13 +16,13 @@ function BaseObject(name, image_path, x, y, width, height, image_count) {
 	} else {
         this.image_count = 1;
 	}
-	this.ready    	     = false;		
+		
+	this.images_loaded  = 0;
 
-	var images_loaded  = 0;
-
-	function onImageLoad(){
-		images_loaded   += 1;
-		if (images_loaded >= this.image_count) {
+	this.onImageLoad = function(){
+		this.images_loaded   += 1;
+		//console.log("Loading image: ", this.name, this.images_loaded, this.image_count, this.ready);
+		if (this.image_count == 1 || this.images_loaded >= this.image_count*0.85) {
 			this.ready = true;
 		}
 	};
@@ -33,7 +35,7 @@ function BaseObject(name, image_path, x, y, width, height, image_count) {
         	console.log("Loading 1 image");
             th.current_image        = new Image();
             th.current_image.src    = th.image_path;
-            th.current_image.onload = onImageLoad;
+            th.current_image.onload = th.onImageLoad;
         } else {
         	console.log("Loading many images");
             th.frames = [];
@@ -44,7 +46,7 @@ function BaseObject(name, image_path, x, y, width, height, image_count) {
                     h = "0"+h;
                 }
                 th.frames[i].src    = th.image_path.replace(/\$/g,h);
-                th.frames[i].onload = onImageLoad;
+                th.frames[i].onload = function(){th.onImageLoad()};
             }
            	th.image_id = 1;
             th.current_image = th.frames[th.image_id];

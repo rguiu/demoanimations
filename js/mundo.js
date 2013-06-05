@@ -2,6 +2,7 @@ function Mundo() {
 	this.context = null;
 	this.canvas = null;
 	this.inhabitants = [];
+	this.ready = false;
 
 	this.resize_canvas = function(){
 		this.canvas.width = window.innerWidth - 250;
@@ -19,21 +20,39 @@ function Mundo() {
 		});
 
 		var heartbeat = function() {
-			for(var i in t.inhabitants) {
-				t.inhabitants[i].heartbeat();
-			}
-			t.context.clearRect(0,0,t.canvas.width, t.canvas.height);
-
-			// @todo
-			// no deberia hcer esto todo el tiempo
-			t.inhabitants.sort(function(a,b) { return (a.y+a.height - b.y-b.height) || (a.x - b.x)});
-			for(var i in t.inhabitants) {
-				t.inhabitants[i].paint(t.context);
-			} 
-			for(var i in t.inhabitants) {
-				if (t.inhabitants[i].alive === true) {
-					t.inhabitants[i].paint_extra(t.context);
+			if (t.ready) {
+				for(var i in t.inhabitants) {
+					t.inhabitants[i].heartbeat();
 				}
+				t.context.clearRect(0,0,t.canvas.width, t.canvas.height);
+
+				// @todo
+				// no deberia hcer esto todo el tiempo
+				t.inhabitants.sort(function(a,b) { return (a.y+a.height - b.y-b.height) || (a.x - b.x)});
+				for(var i in t.inhabitants) {
+					t.inhabitants[i].paint(t.context);
+				} 
+				for(var i in t.inhabitants) {
+					if (t.inhabitants[i].alive === true) {
+						t.inhabitants[i].paint_extra(t.context);
+					}
+				}
+			} else {
+				var local_ready = true;
+				for(var i in t.inhabitants) {
+					if (t.inhabitants[i].ready !== true) {
+						console.log(t.inhabitants[i].name, "is not ready", t.inhabitants[i].images_loaded, t.inhabitants[i].image_count);
+						local_ready = false;
+						break;
+					}
+				} 
+				t.ready = local_ready;
+				if (t.ready === true) {
+					document.getElementById("loading").style.display="none";
+					document.getElementById("main").style.display="block";
+					document.getElementById("commands").style.display="block";
+				}
+ 
 			}
 		};
 
