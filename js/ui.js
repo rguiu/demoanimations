@@ -15,7 +15,6 @@ $(function() {
 		    }    	
 	    } else if (ors[1] === "para") {
 	    	person.move(-1);
-			mundo.luz = false;
 	    } else if (ors[1] === "baila") {
 	    	person.dance();
 	    } else if (ors[0] === "luces") {
@@ -23,7 +22,7 @@ $(function() {
 	    } else if (ors[0] === "musica") {
 	    	for(var i in mundo.inhabitants) {
 				mundo.inhabitants[i].dance();
-				mundo.luz = true;
+				mundo.effects["luz"] = new Effects.Lights();
 			} 
 	    } else if (ors[0] === "nace" && ors.length === 5) {
 	    	// chapucilla
@@ -41,7 +40,18 @@ $(function() {
 	     		mundo.inhabitants.push(window[name]);
      			person = window[""];
      		}
-
+     	} else if (ors[0] === "luz") {
+     		if (ors[1] === "on") {
+     			mundo.effects["luz"] = new Effects.Lights();
+     		} else {
+     			delete mundo.effects["luz"];
+     		}
+     	} else if (ors[0] === "rain") {
+     		if (ors[1]) {
+     			mundo.effects["rain"] = new Effects.Rain(parseInt(ors[1]));
+     		} else {
+     			delete mundo.effects["rain"];
+     		}
 	    } else {
 	    	console.log("No entiendo: "+or);
 	    	alert("No entiendo: "+or+", "+ors.length);

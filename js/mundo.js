@@ -2,6 +2,7 @@ function Mundo() {
 	this.context = null;
 	this.canvas = null;
 	this.inhabitants = [];
+	this.effects = {};
 	this.ready = false;
 
 	this.resize_canvas = function(){
@@ -39,11 +40,9 @@ function Mundo() {
 				}
 				
 				//add dance lights! when mundo.luz == true
-				if(mundo.luz == true)
-					{
-						luz = new RayoLuz();	
-					}
-
+				for (key in t.effects) {
+					t.effects[key].execute(t.context);
+				} 
 			} else {
 				var local_ready = true;
 				for(var i in t.inhabitants) {
