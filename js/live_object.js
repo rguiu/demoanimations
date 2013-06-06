@@ -121,4 +121,40 @@ function LiveObject(name, image_path, x, y, width, height, image_count) {
 }
 
 
+function get_random_color() {
+	var letters = '0123456789ABCDEF'.split('');
+	var color = '#';
+	for (var i = 0; i < 6; i++ ) {
+		color += letters[Math.round(Math.random() * 15)];
+	}
+	return color;
+}
+				
+function RayoLuz() {
+				canvas = document.getElementById("canvas");
+				context = canvas.getContext('2d');
+				context.globalAlpha = 0.3;
+				rayoluzini = Math.floor((Math.random()*window.innerWidth - 250)+1);
+				rayoluzfin = rayoluzini+200;
+				
+				context.beginPath();
+				context.moveTo(0,-100);
+				context.lineTo(rayoluzini,canvas.height);
+				context.lineTo(rayoluzfin,canvas.height);
+				context.fillStyle=get_random_color();
+				context.fill();
+				
+				rayoluzini = Math.floor((Math.random()*window.innerWidth - 250)+1);
+				rayoluzfin = rayoluzini+200;
+				
+				context.beginPath();
+				context.moveTo(canvas.width,-100);
+				context.lineTo(rayoluzini,canvas.height);
+				context.lineTo(rayoluzfin,canvas.height);
+				context.fillStyle=get_random_color();
+				context.fill();
+				context.globalAlpha = 1;
+}
+	
+
 	
