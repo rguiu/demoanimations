@@ -133,7 +133,7 @@ function get_random_color() {
 function RayoLuz() {
 				canvas = document.getElementById("canvas");
 				context = canvas.getContext('2d');
-				
+				context.globalAlpha = 0.3;
 				rayoluzini = Math.floor((Math.random()*window.innerWidth - 250)+1);
 				rayoluzfin = rayoluzini+200;
 				
@@ -153,6 +153,7 @@ function RayoLuz() {
 				context.lineTo(rayoluzfin,canvas.height);
 				context.fillStyle=get_random_color();
 				context.fill();
+				context.globalAlpha = 1;
 }
 	
 
