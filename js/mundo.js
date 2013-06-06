@@ -37,6 +37,13 @@ function Mundo() {
 						t.inhabitants[i].paint_extra(t.context);
 					}
 				}
+				
+				//add dance lights! when mundo.luz == true
+				if(mundo.luz == true)
+					{
+						luz = new RayoLuz();	
+					}
+
 			} else {
 				var local_ready = true;
 				for(var i in t.inhabitants) {
@@ -81,5 +88,5 @@ $(function() {
 	mundo.inhabitants.push(paco);
 	mundo.inhabitants.push(juan);
 	//mundo.inhabitants.push(house);
-
+	
 });
