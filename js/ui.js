@@ -19,10 +19,11 @@ $(function() {
 	    	person.dance();
 	    } else if (ors[0] === "luces") {
 	    	mundo.luz = true;
-	    } else if (ors[0] === "musica") {
+	    }	
+		else if (ors[0] === "musica") {
 	    	for(var i in mundo.inhabitants) {
 				mundo.inhabitants[i].dance();
-				mundo.effects["luz"] = new Effects.Lights();
+				mundo.effects["luz"] = new Effects.Lights(ors[1]);
 			} 
 	    } else if (ors[0] === "nace" && ors.length === 5) {
 	    	// chapucilla
@@ -42,7 +43,7 @@ $(function() {
      		}
      	} else if (ors[0] === "luz") {
      		if (ors[1] === "on") {
-     			mundo.effects["luz"] = new Effects.Lights();
+     			mundo.effects["luz"] = new Effects.Lights(ors[2]);
      		} else {
      			delete mundo.effects["luz"];
      		}
