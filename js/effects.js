@@ -1,7 +1,7 @@
 // Effects
 
 var Effects = {
-	Lights: function() {
+	Lights: function(color) {
     this.name = "lights";
 
     this.ray = function(context, width) {
@@ -11,7 +11,14 @@ var Effects = {
       context.moveTo(width,-100);
       context.lineTo(rayoluzini,canvas.height);
       context.lineTo(rayoluzfin,canvas.height);
-      context.fillStyle = Util.random_color();
+	  if (color == null)
+	  {
+		context.fillStyle = Util.random_color();
+	  }
+	  else
+	  {
+		context.fillStyle=color;
+	  }
       context.fill();
     };
 
