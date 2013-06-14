@@ -1,0 +1,11 @@
+#gamecanvas {
+
+}
+
+.column {
+	float: left;
+}
+
+#car_list {
+	list-style: none;
+}
