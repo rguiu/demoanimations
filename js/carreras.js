@@ -138,6 +138,7 @@ var Car = function(canvas, circuit, w, h, key) {
 	this.w = w;
 	this.h = h;
 	this.speed = 0.0;
+
 	this.angle = 0;
 	this.slide_angle = 0;
 
@@ -170,7 +171,6 @@ var Car = function(canvas, circuit, w, h, key) {
 		} else {
 			this.decelerate();
 		}
-
 		this.l += this.speed; 
 		var position = this.circuit.position(this.l, this.w, this.h);
 		this.x = position[0];
@@ -195,18 +195,31 @@ var Car = function(canvas, circuit, w, h, key) {
 	};
 
 	this.display = null;
+
+	this.centripete_aceleration = function() {
+		if (this.angle !== 0) {
+			return centripete_aceleration = (this.speed * this.speed) * 100 / this.circuit.radius;
+		} else {
+			return 0;
+		}
+	};
+
+	this.display_message = function() {
+		return Math.floor(this.speed * 30) + "KM/H  : "+ 
+		Math.floor(this.l%circuit.length)+":"+Math.floor(this.centripete_aceleration());
+	};
+
 	this.create_display = function() {
 		var car_list = document.getElementById("car_list");
 		var li=document.createElement('li');
-
-		li.appendChild(document.createTextNode( Math.floor(this.speed * 30) + "KM/H  : "+ Math.floor(this.l%circuit.length)));
+		li.appendChild(document.createTextNode(""));
 		li.style.color = this.colour;
 		car_list.appendChild(li);
 		this.display = li;
 	};
 
 	this.update_display = function() {
-		this.display.innerHTML = Math.floor(this.speed * 30) + "KM/H  : "+ Math.floor(this.l%circuit.length);
+		this.display.innerHTML = this.display_message();
 	};
 
 	this.create_display();
