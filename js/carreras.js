@@ -1,3 +1,7 @@
+
+// Keys, for interaction
+var pressed_keys = {};
+
 var main = function(){
 	var canvas = document.getElementById("gamecanvas");
   	var context = canvas.getContext("2d");
@@ -15,14 +19,22 @@ var main = function(){
 
   	var cars = [];
 
-		for(var i = 0;i<circuits.length;i++) {
-  		cars.push(new Car(canvas, circuits[i], 15,9));
+  	var keys = ["Q", "W", "E", "R"];
+
+	for(var i = 0;i<circuits.length;i++) {
+		if (keys.length -1 >= i ) {
+  			cars.push(new Car(canvas, circuits[i], 15,9, keys[i]));
+  		} else {
+  			cars.push(new Car(canvas, circuits[i], 15,9));
+  		}
   	}
 
   	var animation = function() {
   		for(var i = 0;i<cars.length;i++) {
   			cars[i].run();
-  			randomAceleration(cars[i])
+  			if (cars[i].interactive_key === undefined) {
+  				randomAceleration(cars[i]);
+  			}
   		} 
 
   		context.fillStyle ="#000000";
@@ -34,18 +46,24 @@ var main = function(){
   			cars[i].paint();
   		} 
   	};
+
+  	document.body.onkeydown = function(event){
+	    event = event || window.event;
+	    var keycode = event.charCode || event.keyCode;
+	    pressed_keys[keycode] = true;
+	}
+
+	document.body.onkeyup = function(event){
+	    event = event || window.event;
+	    var keycode = event.charCode || event.keyCode;
+	    delete pressed_keys[keycode];
+	}
+
   	setInterval(animation, 1000/25);
 };
 
 function randomAceleration(car) {
-	if (car.speed < 4.5 && Math.random() * 3 < 1) {
-		car.acelerate();
-	} else if (car.speed < 5.5 && Math.random() * 5 < 1) {
-		car.acelerate();
-	} else if (car.speed < 6 && Math.random() * 100 < 1) {
-		// BOOOM
-		car.speed = 10;
-	}
+	// implement your own driver.. if you dont want to press keys
 };
 
 var Circuit = function(canvas, radius, xmargin, colour) {
@@ -83,9 +101,10 @@ var Circuit = function(canvas, radius, xmargin, colour) {
 	this.position = function(l, car_w, car_h) {
 		l = l % this.length;
 		if (l <= this.sections[0]) {
-			return [x1 + l, y1 - radius - car_h/2, 0];
+			return [x1 + l - car_w/2, y1 - radius - car_h/2, 0];
 		} else if (l <= this.sections[1]) {
 			// angle is equal to the distance in the half circle divided by the radius
+			l=l-car_w/2;
 			var angle = (l - this.straight)/this.radius;
 
 			return [
@@ -96,8 +115,9 @@ var Circuit = function(canvas, radius, xmargin, colour) {
 				
 			];
 		} else if (l <= this.sections[2]) {
-			return [x1 + this.sections[2] - l, y1 + this.radius - car_h/2, 0];
+			return [x1 + this.sections[2] - l - car_w/2, y1 + this.radius - car_h/2, 0];
 		} else {
+			l=l+car_w/2;
 			// angle is equal to the distance in the half circle divided by the radius
 			var angle = (l - this.sections[2])/this.radius;
 			return [
@@ -109,7 +129,7 @@ var Circuit = function(canvas, radius, xmargin, colour) {
 	};
 };
 
-var Car = function(canvas, circuit, w, h) {
+var Car = function(canvas, circuit, w, h, key) {
 	this.l = 0;
 	this.circuit = circuit;
 	this.x = circuit.begining[0];
@@ -117,9 +137,14 @@ var Car = function(canvas, circuit, w, h) {
 	this.colour = circuit.colour;
 	this.w = w;
 	this.h = h;
-	this.speed = 0.05;
+	this.speed = 0.0;
 	this.angle = 0;
 	this.slide_angle = 0;
+
+	if (key !== undefined) {
+		this.interactive_key = key.charCodeAt(0); // get the id for the events
+		console.log(key+": "+this.interactive_key);
+	}
 	var context = canvas.getContext("2d");
 
 	this.paint = function() {
@@ -140,6 +165,12 @@ var Car = function(canvas, circuit, w, h) {
 	};
 
 	this.run = function() {
+		if (this.interactive_key in pressed_keys) {
+			this.acelerate();
+		} else {
+			this.decelerate();
+		}
+
 		this.l += this.speed; 
 		var position = this.circuit.position(this.l, this.w, this.h);
 		this.x = position[0];
@@ -180,5 +211,6 @@ var Car = function(canvas, circuit, w, h) {
 
 	this.create_display();
 };
+
 
 window.onload = main;
