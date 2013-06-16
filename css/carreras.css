@@ -13,3 +13,11 @@ body {
 #car_list {
 	list-style: none;
 }
+
+.instructions {
+	clear: both;
+}
+
+.instructions p {
+	color: white;
+}
