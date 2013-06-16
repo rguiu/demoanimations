@@ -5,7 +5,7 @@ var pressed_keys = {};
 var main = function(){
 	var canvas = document.getElementById("gamecanvas");
   	var context = canvas.getContext("2d");
-  	canvas.width = 600;
+  	canvas.width = 640;
   	canvas.height = 400;
 		context.fillStyle ="#000000";
   	context.fillRect(0, 0, canvas.width, canvas.height);
@@ -129,6 +129,61 @@ var Circuit = function(canvas, radius, xmargin, colour) {
 	};
 };
 
+var Accident = function(car) {
+	this.car = car;
+	this.duration = 0;
+	this.direction = -1;
+
+	if (this.car.l > this.car.circuit.sections[2]) {
+		this.direction = -1;
+	} else {
+		this.direction = 1;
+	}
+
+	this.x 		= this.car.x;
+	this.y 		= this.car.y;
+	this.angle 	= this.car.angle; 
+	this.speed  = this.car.speed; 
+	console.log("accident", this.x, this.y, this.direction);
+
+	this.run = function() {
+		if (!isNaN(this.x) && !isNaN(this.y)) {
+			this.x = this.x + (this.direction * this.speed * Math.cos(this.car.angle));
+			this.y = this.y + (this.direction * this.speed * Math.sin(this.car.angle));
+			if (this.duration>5) {
+				this.angle += 0.04 * this.speed;
+			}
+			this.speed -= 0.2;
+			if (this.speed < 0) {
+				this.speed = 0;
+			}
+		}
+		this.duration += 1;
+
+		if (this.duration >= 40) {
+			this.car.speed = 0;
+			this.car.accident = null;
+		}
+	}
+
+	this.paint = function(context) {
+		context.beginPath();
+		context.save();
+		if (this.duration>5) {
+			var xtrans = this.x; // + (this.car.w * Math.cos(this.car.angle));
+			var ytrans = this.y; // + (this.car.w * Math.sin(this.car.angle));
+			context.translate(xtrans, ytrans);
+			context.rotate(this.angle);
+			context.rect(0, 0, this.car.w, this.car.h);
+		} else {
+			context.rect(this.x, this.y, this.car.w, this.car.h);
+		}
+		context.fillStyle = this.car.colour;
+		context.fill();
+		context.restore();
+	};
+};
+
 var Car = function(canvas, circuit, w, h, key) {
 	this.l = 0;
 	this.circuit = circuit;
@@ -140,7 +195,9 @@ var Car = function(canvas, circuit, w, h, key) {
 	this.speed = 0.0;
 
 	this.angle = 0;
-	this.slide_angle = 0;
+	this.slide_angle = 0; 
+
+	this.accident = null;
 
 	if (key !== undefined) {
 		this.interactive_key = key.charCodeAt(0); // get the id for the events
@@ -149,35 +206,49 @@ var Car = function(canvas, circuit, w, h, key) {
 	var context = canvas.getContext("2d");
 
 	this.paint = function() {
-		context.beginPath();
-		context.save();
-		context.translate(this.x, this.y);
-		// if (this.angle == 0 && this.slide_angle > 0) {
-		// 	this.slide_angle -= 0.12;
-		// 	if (this.slide_angle<0) this.slide_angle=0;
-		// } else if (this.angle > 0){
-		// 	this.slide_angle = this.angle * 0.2;
-		// }
-		context.rotate(this.angle + this.slide_angle); // second parameter is the slide factor, will depend on speed
-		context.rect(0, 0, this.w, this.h);
-		context.fillStyle = this.colour;
-		context.fill();
-		context.restore();
+		if (this.accident === null) {
+			context.beginPath();
+			context.save();
+			context.translate(this.x, this.y);
+			// if (this.angle == 0 && this.slide_angle > 0) {
+			// 	this.slide_angle -= 0.12;
+			// 	if (this.slide_angle<0) this.slide_angle=0;
+			// } else if (this.angle > 0){
+			// 	this.slide_angle = this.angle * 0.2;
+			// }
+			context.rotate(this.angle + this.slide_angle); // second parameter is the slide factor, will depend on speed
+			context.rect(0, 0, this.w, this.h);
+			context.fillStyle = this.colour;
+			context.fill();
+			context.restore();
+		} else {
+			this.accident.paint(context);
+		}
 	};
 
 	this.run = function() {
-		if (this.interactive_key in pressed_keys) {
-			this.acelerate();
-		} else {
+		if (this.accident === null) {
+			if (this.interactive_key in pressed_keys) {
+				if (this.angle > 0 && this.centripete_aceleration() > 60) {
+					this.accident = new Accident(this);
+				} else {
+					this.acelerate();
+				}
+			} else {
+				this.decelerate();
+			}
+		}	
+		if (this.accident === null) {
+			this.l += this.speed; 
+			var position = this.circuit.position(this.l, this.w, this.h);
+			this.x = position[0];
+			this.y = position[1];
+			this.angle = position[2];
 			this.decelerate();
+			this.update_display();
+		} else {
+			this.accident.run();
 		}
-		this.l += this.speed; 
-		var position = this.circuit.position(this.l, this.w, this.h);
-		this.x = position[0];
-		this.y = position[1];
-		this.angle = position[2];
-		this.decelerate();
-		this.update_display();
 	};
 
 	this.acelerate = function() {
@@ -205,8 +276,9 @@ var Car = function(canvas, circuit, w, h, key) {
 	};
 
 	this.display_message = function() {
-		return Math.floor(this.speed * 30) + "KM/H  : "+ 
-		Math.floor(this.l%circuit.length)+":"+Math.floor(this.centripete_aceleration());
+		return 	Math.floor(this.speed * 30) + "KM/H  : "+ 
+				Math.floor(this.l%circuit.length) + ":" + Math.floor(this.centripete_aceleration())+
+				":" + this.angle;
 	};
 
 	this.create_display = function() {
