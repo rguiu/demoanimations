@@ -36,9 +36,20 @@ var main = function(){
   				randomAceleration(cars[i]);
   			}
   		} 
+  	// 	context.fillStyle ="#000000";
+ 		// context.lineWidth = 2;
+  	// 	context.fill();
+  	// 	context.rect(0, 0, canvas.width, canvas.height);
+  	// 	context.strokeStyle = "#999999";
+ 		// context.stroke();
 
-  		context.fillStyle ="#000000";
+		context.fillStyle ="#000000";
+ 		context.lineWidth = 2;
+  		context.fill();
   		context.fillRect(0, 0, canvas.width, canvas.height);
+  	 	context.strokeStyle = "#dddddd";
+  	 	context.strokeRect(0, 0, canvas.width, canvas.height);
+  	 
   		for(var i = 0;i<circuits.length;i++) {
   			circuits[i].paint();
   		} 
@@ -79,7 +90,7 @@ var Circuit = function(canvas, radius, xmargin, colour) {
 		context.strokeStyle = colour;
 		context.arc(x1, y1, this.radius, Math.PI * 0.5, Math.PI * 1.5, false);
 		context.arc(canvas.width - x1, y1, radius, Math.PI * 1.5, Math.PI * 0.5, false);
-		context.lineWidth = 2;
+		context.lineWidth = 3;
 		context.closePath();
 		context.stroke();
 
