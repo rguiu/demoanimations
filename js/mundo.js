@@ -17,7 +17,10 @@ function Mundo() {
 	
 		t.resize_canvas();	
 		$(window).resize(function(){
-		 	t.resize_canvas();
+			// dont resize after loading 
+			// o avoid problems with keyboard popping on phones
+			// have to think about this later.
+		 	//t.resize_canvas();
 		});
 
 		var heartbeat = function() {
