@@ -55,26 +55,34 @@ var main = function(){
 			context.fill();
   		};
   		this.draw = function(){
-  			this.clear();
-  			for(var i = 0; i<this.components.length;i++) {
-  				this.components[i].draw();
+  			if (this.updated) {
+	  			this.clear();
+	  			for(var i = 0; i<this.components.length;i++) {
+	  				this.components[i].draw();
+	  			}
+	  			this.updated = false;
   			}
   		};
   		this.heartbeat = function() {
   			for(var i = 0; i<this.components.length;i++) {
   				this.components[i].heartbeat();
   			}
+  			this.updated = true;
   		}
+  		this.updated = false;
   	}
+  	var pacmanColour = "#ff0";
+  	var bgColour = "#000";
+  	
 	var canvas = document.getElementById("pacmancanvas");
   	var context = canvas.getContext("2d");
 
-	var pacman = new Pacman(context, "#ff0", "#000");
-	var maze = new Maze(context, "#000", [pacman])
+	var pacman = new Pacman(context, pacmanColour, bgColour);
+	var maze = new Maze(context, bgColour, [pacman])
 	//maze.draw();  
 	function update(){maze.heartbeat()};	
 	function draw() {requestAnimationFrame(draw);maze.draw();};
-	setInterval(update, 40);
+	setInterval(update, 50);
 	draw();
 };
 
